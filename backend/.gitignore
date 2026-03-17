@@ -1,0 +1,18 @@
+# Java / Spring Boot
+backend/target/
+*.log
+*.class
+
+# Node
+frontend/node_modules/
+frontend/dist/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+
+# Env
+.env

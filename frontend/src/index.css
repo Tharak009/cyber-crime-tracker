@@ -1,0 +1,136 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-slate-50 text-slate-900;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+.card {
+  @apply rounded-2xl bg-white shadow-panel border border-slate-200;
+}
+
+.btn-primary {
+  @apply inline-flex items-center justify-center rounded-xl bg-brand-500 px-4 py-2 font-medium text-white transition hover:bg-brand-700;
+}
+
+.btn-secondary {
+  @apply inline-flex items-center justify-center rounded-xl border border-slate-300 px-4 py-2 font-medium text-slate-700 transition hover:bg-slate-100;
+}
+
+.input {
+  @apply w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm outline-none transition focus:border-brand-500 focus:ring-2 focus:ring-brand-100;
+}
+
+.badge {
+  @apply inline-flex rounded-full px-3 py-1 text-xs font-semibold;
+}
+
+[data-theme="dark"] body {
+  background: linear-gradient(180deg, #020617 0%, #0f172a 45%, #111827 100%);
+  color: #e2e8f0;
+}
+
+[data-theme="dark"] .card {
+  background: rgba(15, 23, 42, 0.9);
+  border-color: #334155;
+  box-shadow: 0 20px 45px rgba(2, 6, 23, 0.45);
+}
+
+[data-theme="dark"] .btn-secondary {
+  background: rgba(15, 23, 42, 0.9);
+  border-color: #334155;
+  color: #e2e8f0;
+}
+
+[data-theme="dark"] .btn-secondary:hover {
+  background: #1e293b;
+}
+
+[data-theme="dark"] .input {
+  background: #0f172a;
+  border-color: #334155;
+  color: #e2e8f0;
+}
+
+[data-theme="dark"] .input::placeholder {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .bg-white,
+[data-theme="dark"] .bg-slate-50,
+[data-theme="dark"] .bg-slate-100 {
+  background-color: rgba(15, 23, 42, 0.9) !important;
+}
+
+[data-theme="dark"] .border-slate-100,
+[data-theme="dark"] .border-slate-200,
+[data-theme="dark"] .border-slate-300 {
+  border-color: #334155 !important;
+}
+
+[data-theme="dark"] .text-slate-900 {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .text-slate-700 {
+  color: #cbd5e1 !important;
+}
+
+[data-theme="dark"] .text-slate-600,
+[data-theme="dark"] .text-slate-500 {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .text-slate-400 {
+  color: #64748b !important;
+}
+
+[data-theme="dark"] .text-brand-700 {
+  color: #6ee7b7 !important;
+}
+
+[data-theme="dark"] .bg-brand-50 {
+  background-color: rgba(16, 185, 129, 0.14) !important;
+}
+
+[data-theme="dark"] .bg-emerald-50 {
+  background-color: rgba(16, 185, 129, 0.12) !important;
+}
+
+[data-theme="dark"] .bg-red-50 {
+  background-color: rgba(239, 68, 68, 0.12) !important;
+}
+
+[data-theme="dark"] .bg-orange-100,
+[data-theme="dark"] .bg-yellow-100,
+[data-theme="dark"] .bg-blue-100,
+[data-theme="dark"] .bg-indigo-100,
+[data-theme="dark"] .bg-cyan-100,
+[data-theme="dark"] .bg-purple-100,
+[data-theme="dark"] .bg-sky-100 {
+  filter: brightness(0.72);
+}
+
+[data-theme="dark"] table thead {
+  background: rgba(15, 23, 42, 0.95);
+}
+
+[data-theme="dark"] .shadow-panel {
+  box-shadow: 0 20px 45px rgba(2, 6, 23, 0.45);
+}

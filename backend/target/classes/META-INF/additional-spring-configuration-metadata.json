@@ -1,0 +1,24 @@
+{
+  "properties": [
+    {
+      "name": "app.jwt.secret",
+      "type": "java.lang.String",
+      "description": "JWT signing secret used by the application."
+    },
+    {
+      "name": "app.jwt.expiration-ms",
+      "type": "java.lang.Long",
+      "description": "JWT expiration time in milliseconds."
+    },
+    {
+      "name": "app.frontend-url",
+      "type": "java.lang.String",
+      "description": "Frontend base URL used in links and notifications."
+    },
+    {
+      "name": "app.file-storage-path",
+      "type": "java.lang.String",
+      "description": "Server-side path for uploaded evidence storage."
+    }
+  ]
+}
