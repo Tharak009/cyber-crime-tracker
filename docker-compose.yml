@@ -1,0 +1,58 @@
+services:
+  mysql:
+    image: mysql:8.4
+    container_name: cybercrime-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: cyber_crime_tracker
+      MYSQL_USER: ${DB_USERNAME:-cybercrime}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-cybercrime}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-rootpassword}
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-p${MYSQL_ROOT_PASSWORD:-rootpassword}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build:
+      context: ./backend
+    container_name: cybercrime-backend
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      DB_URL: jdbc:mysql://mysql:3306/cyber_crime_tracker?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      DB_USERNAME: ${DB_USERNAME:-cybercrime}
+      DB_PASSWORD: ${DB_PASSWORD:-cybercrime}
+      SERVER_PORT: 8081
+      JWT_SECRET: ${JWT_SECRET:-0123456789012345678901234567890123456789012345678901234567890123}
+      MAIL_USERNAME: ${MAIL_USERNAME:-no-reply@example.com}
+      MAIL_PASSWORD: ${MAIL_PASSWORD:-password}
+      FRONTEND_URL: ${FRONTEND_URL:-http://localhost}
+      FILE_STORAGE_PATH: /app/uploads
+    ports:
+      - "8081:8081"
+    volumes:
+      - uploads_data:/app/uploads
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        VITE_API_BASE_URL: /api
+    container_name: cybercrime-frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "80:80"
+
+volumes:
+  mysql_data:
+  uploads_data:

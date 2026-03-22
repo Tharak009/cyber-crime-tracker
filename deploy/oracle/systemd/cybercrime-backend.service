@@ -1,0 +1,16 @@
+[Unit]
+Description=Cyber Crime Reporting Backend
+After=network.target mysql.service
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/opt/cybercrime/backend
+EnvironmentFile=/opt/cybercrime/backend.env
+ExecStart=/usr/bin/java -jar /opt/cybercrime/backend/cyber-crime-tracker-1.0.0.jar
+SuccessExitStatus=143
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

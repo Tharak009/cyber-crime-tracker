@@ -1,0 +1,8 @@
+target
+.mvn
+.git
+.idea
+.vscode
+uploads
+*.log
+cp.txt

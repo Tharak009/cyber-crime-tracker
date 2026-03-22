@@ -1,7 +1,24 @@
 import { Client } from "@stomp/stompjs";
 import { API_BASE_URL } from "./api";
 
-const socketBaseUrl = API_BASE_URL.replace(/^http/i, "ws");
+function resolveSocketBaseUrl(baseUrl) {
+  if (baseUrl.startsWith("https://")) {
+    return baseUrl.replace(/^https/, "wss");
+  }
+
+  if (baseUrl.startsWith("http://")) {
+    return baseUrl.replace(/^http/, "ws");
+  }
+
+  if (baseUrl.startsWith("/")) {
+    const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
+    return `${protocol}//${window.location.host}${baseUrl}`;
+  }
+
+  return baseUrl;
+}
+
+const socketBaseUrl = resolveSocketBaseUrl(API_BASE_URL);
 
 export function connectNotifications(onMessage) {
   const token = localStorage.getItem("token");

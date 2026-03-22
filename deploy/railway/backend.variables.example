@@ -1,0 +1,8 @@
+DB_URL=jdbc:mysql://${{mysql.MYSQLHOST}}:${{mysql.MYSQLPORT}}/${{mysql.MYSQLDATABASE}}?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+DB_USERNAME=${{mysql.MYSQLUSER}}
+DB_PASSWORD=${{mysql.MYSQLPASSWORD}}
+JWT_SECRET=replace-with-a-long-random-secret-at-least-64-characters
+MAIL_USERNAME=replace-with-your-smtp-username
+MAIL_PASSWORD=replace-with-your-smtp-password
+FRONTEND_URL=https://${{frontend.RAILWAY_PUBLIC_DOMAIN}}
+FILE_STORAGE_PATH=/app/uploads
