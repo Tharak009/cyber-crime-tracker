@@ -9,7 +9,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.math.BigDecimal;
@@ -37,8 +36,7 @@ public class Complaint extends BaseEntity {
     private String crimeType;
     private String title;
 
-    @Lob
-    @Column(columnDefinition = "LONGTEXT")
+    @Column(columnDefinition = "TEXT")
     private String description;
 
     private LocalDate incidentDate;
@@ -47,8 +45,7 @@ public class Complaint extends BaseEntity {
     private BigDecimal amountLost;
     private String contactDetails;
 
-    @Lob
-    @Column(columnDefinition = "LONGTEXT")
+    @Column(columnDefinition = "TEXT")
     private String resolutionSummary;
 
     @Enumerated(EnumType.STRING)

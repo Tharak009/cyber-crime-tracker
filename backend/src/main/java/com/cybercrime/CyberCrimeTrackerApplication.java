@@ -8,7 +8,9 @@ import com.cybercrime.entity.User;
 import com.cybercrime.repository.CrimeCategoryRepository;
 import com.cybercrime.repository.RoleRepository;
 import com.cybercrime.repository.UserRepository;
+import java.sql.Connection;
 import java.util.List;
+import javax.sql.DataSource;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
@@ -32,12 +34,10 @@ public class CyberCrimeTrackerApplication {
                                    UserRepository userRepository,
                                    CrimeCategoryRepository crimeCategoryRepository,
                                    PasswordEncoder passwordEncoder,
-                                   JdbcTemplate jdbcTemplate) {
+                                   JdbcTemplate jdbcTemplate,
+                                   DataSource dataSource) {
         return args -> {
-            runMigration(jdbcTemplate, "ALTER TABLE complaints MODIFY COLUMN description LONGTEXT NOT NULL");
-            runMigration(jdbcTemplate, "ALTER TABLE complaints MODIFY COLUMN resolution_summary LONGTEXT NULL");
-            runMigration(jdbcTemplate, "ALTER TABLE case_notes MODIFY COLUMN note LONGTEXT NOT NULL");
-            runMigration(jdbcTemplate, "ALTER TABLE announcements MODIFY COLUMN content LONGTEXT NOT NULL");
+            applyTextColumnMigrations(jdbcTemplate, dataSource);
 
             for (RoleName roleName : RoleName.values()) {
                 roleRepository.findByName(roleName)
@@ -90,6 +90,38 @@ public class CyberCrimeTrackerApplication {
                             .description(name + " related incidents")
                             .build())));
         };
+    }
+
+    private void applyTextColumnMigrations(JdbcTemplate jdbcTemplate, DataSource dataSource) {
+        String databaseProductName = resolveDatabaseProductName(dataSource);
+        log.info("Applying startup schema adjustments for database: {}", databaseProductName);
+
+        if (databaseProductName.contains("postgresql")) {
+            runMigration(jdbcTemplate, "ALTER TABLE complaints ALTER COLUMN description TYPE TEXT");
+            runMigration(jdbcTemplate, "ALTER TABLE complaints ALTER COLUMN resolution_summary TYPE TEXT");
+            runMigration(jdbcTemplate, "ALTER TABLE case_notes ALTER COLUMN note TYPE TEXT");
+            runMigration(jdbcTemplate, "ALTER TABLE announcements ALTER COLUMN content TYPE TEXT");
+            return;
+        }
+
+        if (databaseProductName.contains("mysql")) {
+            runMigration(jdbcTemplate, "ALTER TABLE complaints MODIFY COLUMN description LONGTEXT NOT NULL");
+            runMigration(jdbcTemplate, "ALTER TABLE complaints MODIFY COLUMN resolution_summary LONGTEXT NULL");
+            runMigration(jdbcTemplate, "ALTER TABLE case_notes MODIFY COLUMN note LONGTEXT NOT NULL");
+            runMigration(jdbcTemplate, "ALTER TABLE announcements MODIFY COLUMN content LONGTEXT NOT NULL");
+            return;
+        }
+
+        log.info("No vendor-specific text column migration configured for database: {}", databaseProductName);
+    }
+
+    private String resolveDatabaseProductName(DataSource dataSource) {
+        try (Connection connection = dataSource.getConnection()) {
+            return connection.getMetaData().getDatabaseProductName().toLowerCase();
+        } catch (Exception ex) {
+            log.warn("Could not determine database product name: {}", ex.getMessage());
+            return "unknown";
+        }
     }
 
     private void runMigration(JdbcTemplate jdbcTemplate, String sql) {
