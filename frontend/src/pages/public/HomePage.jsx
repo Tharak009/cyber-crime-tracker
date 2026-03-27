@@ -51,7 +51,7 @@ export default function HomePage() {
         <header className="card mb-8 overflow-hidden">
           <div className="flex flex-wrap items-center justify-between gap-4 border-b border-white/10 bg-[linear-gradient(135deg,rgba(15,23,42,0.98),rgba(14,143,105,0.86))] px-6 py-5 text-white lg:px-8">
             <div className="flex items-center gap-4">
-              <img src="/logo-dark.svg" alt="Cyber Crime Tracker" className="h-14 w-auto" />
+              <img src="/logo-dark.svg" alt="Cyber Crime Tracker" className="h-9 w-auto sm:h-10 lg:h-14" />
               <div>
                 <p className="text-xs uppercase tracking-[0.35em] text-brand-100">Citizen safety platform</p>
                 <h1 className="mt-3 text-2xl font-semibold lg:text-3xl">Cyber Crime Reporting &amp; Case Tracking System</h1>
