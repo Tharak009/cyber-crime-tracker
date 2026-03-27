@@ -70,9 +70,15 @@ export default function AppShell({
     <div className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(14,143,105,0.10),_transparent_28%),linear-gradient(180deg,#f8fafc_0%,#eef2ff_48%,#e2e8f0_100%)]">
       <div className="mx-auto flex min-h-screen max-w-7xl gap-6 px-4 py-6 lg:px-6">
         <aside className="hidden w-80 flex-col rounded-[2rem] bg-slateX p-6 text-white lg:flex">
-          <Link to="/" className="mb-10 rounded-3xl border border-white/10 bg-white/5 p-5 text-xl font-semibold leading-tight backdrop-blur">
-            Cyber Crime Reporting
-            <span className="mt-2 block text-sm font-normal text-slate-300">Secure reporting, case tracking, evidence flow, and officer coordination.</span>
+          <Link to="/" className="mb-10 rounded-3xl border border-white/10 bg-white/5 p-5 backdrop-blur">
+            <div className="flex items-center gap-4">
+              <img src="/logo-mark.svg" alt="Cyber Crime Tracker" className="h-14 w-14 shrink-0" />
+              <div className="min-w-0">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.32em] text-brand-100">Cyber Crime</p>
+                <p className="mt-1 text-xl font-semibold leading-tight text-white">Tracker</p>
+              </div>
+            </div>
+            <span className="mt-4 block text-sm font-normal leading-6 text-slate-300">Secure reporting, case tracking, evidence flow, and officer coordination.</span>
           </Link>
           <div className="mb-4">
             <p className="text-xs uppercase tracking-[0.35em] text-slate-400">Workspace</p>

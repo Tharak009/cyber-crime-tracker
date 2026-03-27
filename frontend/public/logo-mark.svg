@@ -1,0 +1,12 @@
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="logoMarkTitle logoMarkDesc">
+  <title id="logoMarkTitle">Cyber Crime Tracker logo mark</title>
+  <desc id="logoMarkDesc">Minimal shield emblem with an investigation lens and digital signal accent.</desc>
+  <g id="mark">
+    <path d="M32 5C45.5 5 55 12.9 55 24.8V31.2C55 43.6 47.2 54.7 32 59C16.8 54.7 9 43.6 9 31.2V24.8C9 12.9 18.5 5 32 5Z" fill="#0B1F3A"/>
+    <path d="M32 11C42 11 49 16.8 49 26.3V30C49 39.8 42.8 47.9 32 51.8C21.2 47.9 15 39.8 15 30V26.3C15 16.8 22 11 32 11Z" stroke="#00C2D1" stroke-width="2.2" stroke-linejoin="round"/>
+    <circle cx="29" cy="29" r="7.5" stroke="#F8FBFF" stroke-width="3"/>
+    <path d="M34.8 34.8L40.5 40.5" stroke="#F8FBFF" stroke-width="3" stroke-linecap="round"/>
+    <path d="M26 29H32" stroke="#00C2D1" stroke-width="2.4" stroke-linecap="round"/>
+    <circle cx="46.5" cy="18.5" r="2.5" fill="#00C2D1"/>
+  </g>
+</svg>

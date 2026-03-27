@@ -50,9 +50,12 @@ export default function HomePage() {
       <div className="mx-auto max-w-7xl px-4 py-6 lg:px-6">
         <header className="card mb-8 overflow-hidden">
           <div className="flex flex-wrap items-center justify-between gap-4 border-b border-white/10 bg-[linear-gradient(135deg,rgba(15,23,42,0.98),rgba(14,143,105,0.86))] px-6 py-5 text-white lg:px-8">
-            <div>
-              <p className="text-xs uppercase tracking-[0.35em] text-brand-100">Citizen safety platform</p>
-              <h1 className="mt-3 text-2xl font-semibold lg:text-3xl">Cyber Crime Reporting & Case Tracking System</h1>
+            <div className="flex items-center gap-4">
+              <img src="/logo-light.svg" alt="Cyber Crime Tracker" className="h-14 w-auto" />
+              <div>
+                <p className="text-xs uppercase tracking-[0.35em] text-brand-100">Citizen safety platform</p>
+                <h1 className="mt-3 text-2xl font-semibold lg:text-3xl">Cyber Crime Reporting &amp; Case Tracking System</h1>
+              </div>
             </div>
             <nav className="flex flex-wrap gap-3">
               <Link to="/about" className="btn-secondary border-white/20 bg-white/10 text-white hover:bg-white/20">About</Link>
