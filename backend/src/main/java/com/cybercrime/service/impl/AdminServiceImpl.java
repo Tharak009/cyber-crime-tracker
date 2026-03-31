@@ -1,6 +1,7 @@
 package com.cybercrime.service.impl;
 
 import com.cybercrime.dto.AnnouncementRequest;
+import com.cybercrime.dto.AnnouncementDto;
 import com.cybercrime.dto.DashboardStatsDto;
 import com.cybercrime.dto.UserDto;
 import com.cybercrime.entity.AccountStatus;
@@ -82,21 +83,24 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     @Transactional
-    public Object createAnnouncement(AnnouncementRequest request) {
+    public AnnouncementDto createAnnouncement(AnnouncementRequest request) {
         User admin = userRepository.findByEmail(SecurityUtil.currentUsername()).orElseThrow(() -> new ResourceNotFoundException("Admin not found"));
-        return announcementRepository.save(Announcement.builder()
+        Announcement announcement = announcementRepository.save(Announcement.builder()
                 .title(request.getTitle())
                 .content(request.getContent())
                 .published(request.isPublished())
                 .createdAt(LocalDateTime.now())
                 .createdBy(admin)
                 .build());
+        return toAnnouncementDto(announcement);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<?> getPublishedAnnouncements() {
-        return announcementRepository.findByPublishedTrueOrderByCreatedAtDesc();
+    public List<AnnouncementDto> getPublishedAnnouncements() {
+        return announcementRepository.findByPublishedTrueOrderByCreatedAtDesc().stream()
+                .map(this::toAnnouncementDto)
+                .toList();
     }
 
     @Override
@@ -135,5 +139,15 @@ public class AdminServiceImpl implements AdminService {
         } catch (DocumentException ex) {
             throw new IllegalStateException("PDF generation failed");
         }
+    }
+
+    private AnnouncementDto toAnnouncementDto(Announcement announcement) {
+        return AnnouncementDto.builder()
+                .id(announcement.getId())
+                .title(announcement.getTitle())
+                .content(announcement.getContent())
+                .published(announcement.isPublished())
+                .createdAt(announcement.getCreatedAt())
+                .build();
     }
 }

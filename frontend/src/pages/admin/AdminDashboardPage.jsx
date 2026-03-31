@@ -31,6 +31,7 @@ export default function AdminDashboardPage() {
   const [announcement, setAnnouncement] = useState({ title: "", content: "", published: true });
   const [assignmentError, setAssignmentError] = useState("");
   const [assignmentSuccess, setAssignmentSuccess] = useState("");
+  const [announcementError, setAnnouncementError] = useState("");
   const [announcementMessage, setAnnouncementMessage] = useState("");
   const [filters, setFilters] = useState({ query: "", status: "ALL", priority: "ALL" });
   const complaints = Array.isArray(complaintsData) ? complaintsData : [];
@@ -295,15 +296,22 @@ export default function AdminDashboardPage() {
               <div className="mt-5 space-y-4">
                 <input className="input" placeholder="Title" value={announcement.title} onChange={(event) => setAnnouncement({ ...announcement, title: event.target.value })} />
                 <textarea className="input min-h-28" placeholder="Content" value={announcement.content} onChange={(event) => setAnnouncement({ ...announcement, content: event.target.value })} />
+                {announcementError && <p className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700">{announcementError}</p>}
                 {announcementMessage && <p className="rounded-xl bg-emerald-50 px-4 py-3 text-sm text-emerald-700">{announcementMessage}</p>}
                 <button
                   className="btn-primary"
                   type="button"
                   onClick={async () => {
-                    await api.post("/admin/announcements", announcement);
-                    setAnnouncement({ title: "", content: "", published: true });
-                    setAnnouncementMessage("Announcement published successfully.");
-                    await load();
+                    setAnnouncementError("");
+                    setAnnouncementMessage("");
+                    try {
+                      await api.post("/admin/announcements", announcement);
+                      setAnnouncement({ title: "", content: "", published: true });
+                      setAnnouncementMessage("Announcement published successfully.");
+                      await load();
+                    } catch (err) {
+                      setAnnouncementError(err.response?.data?.message || "Failed to publish announcement");
+                    }
                   }}
                 >
                   Publish

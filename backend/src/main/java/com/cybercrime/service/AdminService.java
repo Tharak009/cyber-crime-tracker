@@ -1,6 +1,7 @@
 package com.cybercrime.service;
 
 import com.cybercrime.dto.AnnouncementRequest;
+import com.cybercrime.dto.AnnouncementDto;
 import com.cybercrime.dto.DashboardStatsDto;
 import com.cybercrime.dto.UserDto;
 import com.cybercrime.entity.AccountStatus;
@@ -12,8 +13,8 @@ public interface AdminService {
     List<UserDto> getOfficers();
     UserDto updateAccountStatus(Long userId, AccountStatus status);
     DashboardStatsDto getStatistics();
-    Object createAnnouncement(AnnouncementRequest request);
-    List<?> getPublishedAnnouncements();
+    AnnouncementDto createAnnouncement(AnnouncementRequest request);
+    List<AnnouncementDto> getPublishedAnnouncements();
     ByteArrayResource exportComplaintsCsv();
     ByteArrayResource exportComplaintsPdf();
 }

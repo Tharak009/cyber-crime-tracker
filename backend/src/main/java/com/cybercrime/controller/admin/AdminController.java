@@ -1,6 +1,7 @@
 package com.cybercrime.controller.admin;
 
 import com.cybercrime.dto.AnnouncementRequest;
+import com.cybercrime.dto.AnnouncementDto;
 import com.cybercrime.dto.ApiResponse;
 import com.cybercrime.dto.DashboardStatsDto;
 import com.cybercrime.dto.UserDto;
@@ -50,7 +51,7 @@ public class AdminController {
     }
 
     @PostMapping("/announcements")
-    public ResponseEntity<ApiResponse<Object>> createAnnouncement(@Valid @RequestBody AnnouncementRequest request) {
+    public ResponseEntity<ApiResponse<AnnouncementDto>> createAnnouncement(@Valid @RequestBody AnnouncementRequest request) {
         return ResponseEntity.ok(success("Announcement published", adminService.createAnnouncement(request)));
     }
 
