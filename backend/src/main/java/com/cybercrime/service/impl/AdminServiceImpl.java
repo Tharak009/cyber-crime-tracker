@@ -33,6 +33,7 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -44,16 +45,19 @@ public class AdminServiceImpl implements AdminService {
     private final UserMapper userMapper;
 
     @Override
+    @Transactional(readOnly = true)
     public List<UserDto> getUsers() {
         return userRepository.findAll().stream().map(userMapper::toDto).toList();
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<UserDto> getOfficers() {
         return userRepository.findByRoleName(RoleName.ROLE_OFFICER).stream().map(userMapper::toDto).toList();
     }
 
     @Override
+    @Transactional
     public UserDto updateAccountStatus(Long userId, AccountStatus status) {
         User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User not found"));
         user.setStatus(status);
@@ -61,6 +65,7 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public DashboardStatsDto getStatistics() {
         List<Complaint> complaints = complaintRepository.findAll();
         Map<String, Long> byType = complaints.stream().collect(java.util.stream.Collectors.groupingBy(Complaint::getCrimeType, LinkedHashMap::new, java.util.stream.Collectors.counting()));
@@ -76,6 +81,7 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
+    @Transactional
     public Object createAnnouncement(AnnouncementRequest request) {
         User admin = userRepository.findByEmail(SecurityUtil.currentUsername()).orElseThrow(() -> new ResourceNotFoundException("Admin not found"));
         return announcementRepository.save(Announcement.builder()
@@ -88,11 +94,13 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<?> getPublishedAnnouncements() {
         return announcementRepository.findByPublishedTrueOrderByCreatedAtDesc();
     }
 
     @Override
+    @Transactional(readOnly = true)
     public ByteArrayResource exportComplaintsCsv() {
         try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
              CSVPrinter printer = new CSVPrinter(new OutputStreamWriter(outputStream, StandardCharsets.UTF_8),
@@ -111,6 +119,7 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public ByteArrayResource exportComplaintsPdf() {
         try {
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
