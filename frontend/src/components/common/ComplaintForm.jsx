@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { crimeTypes } from "../../utils/constants";
+import api from "../../services/api";
 
 const initialState = {
-  categoryId: 1,
+  categoryId: "",
   crimeType: crimeTypes[0],
   title: "",
   description: "",
@@ -16,6 +17,46 @@ const initialState = {
 export default function ComplaintForm({ onSubmit }) {
   const [form, setForm] = useState(initialState);
   const [error, setError] = useState("");
+  const [categories, setCategories] = useState([]);
+  const [loadingCategories, setLoadingCategories] = useState(true);
+
+  const selectedCategory = useMemo(
+    () => categories.find((category) => String(category.id) === String(form.categoryId)) || null,
+    [categories, form.categoryId]
+  );
+
+  useEffect(() => {
+    const loadCategories = async () => {
+      try {
+        const { data } = await api.get("/categories");
+        const items = Array.isArray(data.data) ? data.data : [];
+        setCategories(items);
+      } catch (err) {
+        setError(err.response?.data?.message || "Failed to load complaint categories");
+      } finally {
+        setLoadingCategories(false);
+      }
+    };
+
+    loadCategories();
+  }, []);
+
+  useEffect(() => {
+    if (!categories.length) return;
+
+    const matchingCategory = categories.find(
+      (category) => category.name?.trim().toLowerCase() === form.crimeType.trim().toLowerCase()
+    );
+
+    if (matchingCategory && String(matchingCategory.id) !== String(form.categoryId)) {
+      setForm((prev) => ({ ...prev, categoryId: String(matchingCategory.id) }));
+      return;
+    }
+
+    if (!matchingCategory && !form.categoryId) {
+      setForm((prev) => ({ ...prev, categoryId: String(categories[0].id) }));
+    }
+  }, [categories, form.categoryId, form.crimeType]);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -28,6 +69,10 @@ export default function ComplaintForm({ onSubmit }) {
       onSubmit={async (event) => {
         event.preventDefault();
         setError("");
+        if (!form.categoryId) {
+          setError("Category could not be resolved for the selected crime type");
+          return;
+        }
         try {
           await onSubmit({
             ...form,
@@ -42,10 +87,6 @@ export default function ComplaintForm({ onSubmit }) {
     >
       {error && <p className="md:col-span-2 rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700">{error}</p>}
       <div>
-        <label className="mb-2 block text-sm font-medium text-slate-700" htmlFor="categoryId">Category Id</label>
-        <input className="input" id="categoryId" name="categoryId" value={form.categoryId} onChange={handleChange} />
-      </div>
-      <div>
         <label className="mb-2 block text-sm font-medium text-slate-700" htmlFor="crimeType">Crime Type</label>
         <select className="input" id="crimeType" name="crimeType" value={form.crimeType} onChange={handleChange}>
           {crimeTypes.map((type) => (
@@ -54,6 +95,15 @@ export default function ComplaintForm({ onSubmit }) {
             </option>
           ))}
         </select>
+      </div>
+      <div>
+        <label className="mb-2 block text-sm font-medium text-slate-700" htmlFor="categoryName">Category</label>
+        <input
+          className="input bg-slate-50"
+          id="categoryName"
+          value={loadingCategories ? "Loading categories..." : selectedCategory?.name || "Auto-selected from crime type"}
+          readOnly
+        />
       </div>
       <div className="md:col-span-2">
         <label className="mb-2 block text-sm font-medium text-slate-700" htmlFor="title">Title</label>
