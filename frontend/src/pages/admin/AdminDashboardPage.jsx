@@ -4,7 +4,7 @@ import StatsCards from "../../components/common/StatsCards";
 import ComplaintTable from "../../components/common/ComplaintTable";
 import { BarChartCard, DoughnutChartCard } from "../../components/common/ChartCard";
 import StatusBadge from "../../components/common/StatusBadge";
-import api from "../../services/api";
+import api, { API_BASE_URL } from "../../services/api";
 import useApi from "../../hooks/useApi";
 import { useComplaintSearch } from "../../hooks/useComplaints";
 import { formatEnumLabel } from "../../utils/formatters";
@@ -314,8 +314,8 @@ export default function AdminDashboardPage() {
             <div className="card p-6">
               <h3 className="text-xl font-semibold text-slate-900">Quick exports</h3>
               <div className="mt-4 flex flex-wrap gap-3">
-                <a className="btn-secondary" href="http://localhost:8081/admin/reports/csv" target="_blank" rel="noreferrer">Download CSV</a>
-                <a className="btn-secondary" href="http://localhost:8081/admin/reports/pdf" target="_blank" rel="noreferrer">Download PDF</a>
+                <a className="btn-secondary" href={`${API_BASE_URL}/admin/reports/csv`} target="_blank" rel="noreferrer">Download CSV</a>
+                <a className="btn-secondary" href={`${API_BASE_URL}/admin/reports/pdf`} target="_blank" rel="noreferrer">Download PDF</a>
               </div>
               <p className="mt-4 text-sm text-slate-500">
                 Export current system snapshots for monthly review, leadership reporting, or archival needs.

@@ -24,9 +24,12 @@ import com.cybercrime.util.MapperUtil;
 import com.cybercrime.util.SecurityUtil;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -93,10 +96,56 @@ public class ComplaintServiceImpl implements ComplaintService {
     @Override
     @Transactional(readOnly = true)
     public List<ComplaintResponse> search(String complaintNumber, String crimeType, String status, String priority, Long officerId, LocalDate fromDate, LocalDate toDate) {
-        ComplaintStatus complaintStatus = status != null ? ComplaintStatus.valueOf(status) : null;
-        PriorityLevel priorityLevel = priority != null ? PriorityLevel.valueOf(priority) : null;
-        return complaintRepository.search(complaintNumber, crimeType, complaintStatus, priorityLevel, officerId, fromDate, toDate)
+        ComplaintStatus complaintStatus = hasText(status) ? ComplaintStatus.valueOf(status.trim()) : null;
+        PriorityLevel priorityLevel = hasText(priority) ? PriorityLevel.valueOf(priority.trim()) : null;
+        Specification<Complaint> specification = (root, query, criteriaBuilder) -> {
+            List<jakarta.persistence.criteria.Predicate> predicates = new ArrayList<>();
+
+            if (hasText(complaintNumber)) {
+                predicates.add(criteriaBuilder.like(
+                        criteriaBuilder.lower(root.get("complaintNumber")),
+                        contains(complaintNumber)));
+            }
+
+            if (hasText(crimeType)) {
+                predicates.add(criteriaBuilder.like(
+                        criteriaBuilder.lower(root.get("crimeType")),
+                        contains(crimeType)));
+            }
+
+            if (complaintStatus != null) {
+                predicates.add(criteriaBuilder.equal(root.get("status"), complaintStatus));
+            }
+
+            if (priorityLevel != null) {
+                predicates.add(criteriaBuilder.equal(root.get("priorityLevel"), priorityLevel));
+            }
+
+            if (officerId != null) {
+                predicates.add(criteriaBuilder.equal(root.get("assignedOfficer").get("id"), officerId));
+            }
+
+            if (fromDate != null) {
+                predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("incidentDate"), fromDate));
+            }
+
+            if (toDate != null) {
+                predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("incidentDate"), toDate));
+            }
+
+            return criteriaBuilder.and(predicates.toArray(jakarta.persistence.criteria.Predicate[]::new));
+        };
+
+        return complaintRepository.findAll(specification, Sort.by(Sort.Direction.DESC, "createdAt"))
                 .stream().map(this::mapResponse).toList();
+    }
+
+    private boolean hasText(String value) {
+        return value != null && !value.isBlank();
+    }
+
+    private String contains(String value) {
+        return "%" + value.trim().toLowerCase() + "%";
     }
 
     private ComplaintResponse mapResponse(Complaint complaint) {
